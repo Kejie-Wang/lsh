@@ -57,7 +57,6 @@ T* vecs_read(const string filename)
 
 	printf("dim=%d, num=%d\n",dim, vecs_num);
 	fseek(fp, 0, SEEK_SET);
-	printf("%d %d\n", (int)(vecs), (int)(vecs+1));
 	for(int i=0;i<vecs_num;++i)
 	{
 		int buff[128];
