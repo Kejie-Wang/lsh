@@ -68,22 +68,11 @@ T* vecs_read(const string filename)
 			exit(0);
 		}
 		fread(vecs+i*dim, sizeof(T), dim, fp);
-		//vecs_print<T>(vecs+i*dim, dim, 1);
 	}
 
 	fclose(fp);
 
-	vecs_print<T>(vecs, dim, vecs_num);
+	// vecs_print<T>(vecs, dim, vecs_num);
 
 	return vecs;
-}
-
-int main()
-{
-	// int* a = new int[8];
-	// for(int i=0;i<8;++i)
-	// 	a[i] = 2*i;
-	// for(int i=0;i<8;++i)
-	// 	printf("%d ", a[i]);
-	vecs_read<float>("siftsmall_base.fvecs");
 }
