@@ -46,9 +46,9 @@ void vecs_read(const std::string filename, T* &vecs, int &dim, int &vecs_num)
 
 //A test function to print the fvecs to check the correctness of the fvecs_read function
 template<typename T>
-void vecs_print(T* vecs, int dim, int vecs_num)
+void vecs_print(std::string filename, T* vecs, int dim, int vecs_num)
 {
-	std::ofstream out("vecs.out");
+	std::ofstream out(filename.c_str());
 
 	if(!out.is_open())
 	{
