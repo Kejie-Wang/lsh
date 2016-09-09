@@ -5,7 +5,7 @@
 #include <fstream>
 
 template<typename T>
-void vecs_read(const std::string filename, T* vecs, int* dim_ptr, int* vecs_num_ptr)
+void vecs_read(const std::string filename, T* &vecs, int &dim, int &vecs_num)
 {
 	FILE* fp = fopen(filename.c_str(), "r");
 
@@ -16,15 +16,14 @@ void vecs_read(const std::string filename, T* vecs, int* dim_ptr, int* vecs_num_
 	}
 
 	//read the vector dimension and vecotr size
-	fread(dim_ptr, sizeof(T), 1, fp);
-	int vecs_sizeof = 1*4 + sizeof(T)*(*dim_ptr);
+	fread(&dim, sizeof(T), 1, fp);
+	int vecs_sizeof = 1*4 + sizeof(T)*dim;
 
 	//Get the number of vector
 	fseek(fp, 0, SEEK_END);
-	*vecs_num_ptr = ftell(fp) / vecs_sizeof;
+	vecs_num = ftell(fp) / vecs_sizeof;
 
 	//allocate memory for the vectors
-  const int dim = *dim_ptr, vecs_num = *vecs_num_ptr;
   vecs = new T[dim*vecs_num];
 
 	//printf("dim=%d, num=%d\n",dim, vecs_num);
