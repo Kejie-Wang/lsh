@@ -3,7 +3,6 @@
 #include "siftsmall/vecs_read.h"
 
 using namespace std;
-using namespace flann;
 
 int main()
 {
@@ -24,8 +23,8 @@ int main()
     exit(0);
   }
 
-  Matrix<float> dataset(base_data, base_vecs_num, base_dim);
-  Matrix<float> query(query_data, query_vecs_num, query_dim);
+  flann::Matrix<float> dataset(base_data, base_vecs_num, base_dim);
+  flann::Matrix<float> query(query_data, query_vecs_num, query_dim);
 
   flann::Matrix<int> indices(new int[query.rows*nn], query.rows, nn);
   flann::Matrix<float> dists(new float[query.rows*nn], query.rows, nn);

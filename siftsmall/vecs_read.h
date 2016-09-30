@@ -1,6 +1,9 @@
 /* vecs_read.h
 *
 */
+#ifndef _VECS_READ_H_
+#define _VECS_READ_H_
+
 #include <string>
 #include <fstream>
 
@@ -68,3 +71,5 @@ void vecs_print(std::string filename, T* vecs, int dim, int vecs_num)
 
 	out.close();
 }
+
+#endif
