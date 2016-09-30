@@ -7,6 +7,8 @@
 #ifndef LSH_LSH_INDEX
 #define LSH_LSH_INDEX
 
+#include <vector>
+
 namespace lsh
 {
 
@@ -15,19 +17,32 @@ struct LshIndexParams
 
 }
 
-template<typename Distance>
+<typename T>
 class LshIndex
 {
 public:
-  typedef typename Distance::ElementType ElementType;
-  typedef typename Distance::ResultType DistanceType;
+	typedef T ElementType;
+  
 
 public:
-  LshIndex()
-  {
-  }
+
+	/**
+	  *Default constructor
+	*/
+	LshIndex()
+	{
+	}
+
+	LshIndex()
 }
 
+
+private:
+
+	/*
+	* Points Data
+	*/
+	std::vector<ElementType*> points_;
 
 
 }
