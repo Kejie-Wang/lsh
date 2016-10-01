@@ -8,14 +8,32 @@
 #define LSH_LSH_INDEX
 
 #include <vector>
+#include <string>
+#include "lsh_index_params.h"
 
 namespace lsh
 {
 
-struct LshIndexParams
-{
+// class LshIndexParams
+// {
+// 	/*lsh table params*/
+// 	unsigned int table_number;
 
-}
+// 	*
+// 	// *  lsh function params
+// 	*  using hashing function family: H(v) = (a*v + b) / w
+// 	*  Concatenation of k LSH functions: g(v) = (h1(v), h2(v), ..., hk(v)) where hi belong to H
+	
+// 	unsigned int key;
+
+// 	/**
+// 	*  lsh query params
+// 	*  multi_probe_level The multi-probe level
+// 	*/
+// 	unsigned int multi_probe_level;
+
+// 	LshIndexParams(unsigned int table_number, )
+// }
 
 <typename T>
 class LshIndex
@@ -27,23 +45,34 @@ public:
 public:
 
 	/**
-	  *Default constructor
+	   Constructor using with the params with default value
 	*/
-	LshIndex()
+	LshIndex(const LshIndexParams params = LshIndexParams())
 	{
+		table_number_ = params.get_table_number();
+		key_size_ = params.get_key_size();
+		multi_probe_level_  =params.get_multi_probe_level_();
 	}
 
-	LshIndex()
 }
 
 
 private:
 
-	/*
-	* Points Data
-	*/
+	/*Points Data*/
 	std::vector<ElementType*> points_;
 
+	/*Hashing tables*/
+	std::std::vector<lsh::LshTable<ElementType> > tables_;
+
+	/*table number*/
+	unsigned int table_number_;
+
+	/*key size*/
+	unsigned int key_size_;
+
+	/*multi-probe level*/
+	unsigned int multi_probe_level_;
 
 }
 
