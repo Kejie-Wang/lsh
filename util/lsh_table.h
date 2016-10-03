@@ -35,6 +35,8 @@ class LshTable
 	typedef long long uint64_t;
 
 public:
+
+	/*Default constructor*/
 	LshTable()
 	{
 	}
@@ -59,21 +61,25 @@ public:
 private:
 	void computeOptParams()
 	{	
-		w = 
+		for(int i=0;i<key_size_;++i)
+		{
+			a_vec_.push_back(lsh::getGaussianRandVec(feature_size_));
+			b_vec_.push_back(lsh::genUniformRandom(0, w));
+		}
+
+		w = 10;			//temporary set
 	}
 
 	/**
-	*  Get the hashing key uusing hashing function family: H(v) = (a*v + b) / w
+	*  Get the hashing value using hashing function family: H(v) = (a*v + b) / w
 	*  @param feature The computed feature
 	*
 	*  a: each entry of it chosen independently from a p-stable distribution
 	*  b: a real number chosen uniformly from the range [0, w]
+	*  @return The hashing value
 	*/
-	unsigned int getKey(const ElementType* feature) const
+	unsigned int hash(const std::vector<double>& a, const double b, const ElementType* feature) const
 	{
-		std::vector<double> a = lsh::getGaussianRandVec(feature_size_);
-		double b = lsh::genUniformRandom(0, w);
-
 		double key=0;
 		for(int i=0;i<feature_size_;++i)
 			key += a[i]*feature[i];
@@ -82,6 +88,10 @@ private:
 		return key;
 	}
 
+	unsigned int getKey(const ElementType* feature) const
+	{
+
+	}
 
 
 private:
@@ -107,12 +117,23 @@ private:
 
 	unsigned int feature_size_;
 
+
+	/**LSH Hashing function: H(v) = (a*v + b) / w
+	 * a: a list of hashing function of the coeffecient a
+	 * b: a list of hashing function if the coeffecient b
+	 * w: a fix value of the coeffecient
+	 */
+	std::vector<std::vector<double> > a_vec_;
+	std::vectoor<double> b_vec_;
 	double w;
 
 	/*two random vector
 	 *r1: use to hash the concatenate the L hash function
+	 *r2: use to compute the identification of the feature
 	 */
-	std::vector<unsigned int> r1, r2;
+	std::vector<unsigned int> r1_, r2_;
+
+
 }
 
 
