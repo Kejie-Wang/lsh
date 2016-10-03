@@ -46,10 +46,11 @@ public:
 	{
 	}
 
-	LshTable(unsigned int feature_size, unsigned int key_size)
+	LshTable(unsigned int feature_size, unsigned int key_size, std::vector<unsigned int> hash_coefficient)
 	{
 		feature_size_ = feature_size;
 		key_size_ = key_size_;
+		hash_coefficient_ = hash_coefficient;
 		computeOptParams();
 	}
 
@@ -63,6 +64,14 @@ public:
 		bucket_space_.push_back(key);
 	}
 
+	void remove(unsigned int value, const ElementType* feature)
+	{
+		BucketKey key = getKey(feature);
+		Bucket::iterator it;
+		if((it == bucket_space_.find(bucket_space_.begin(), bucket_space_.end(), value)) != bucket_space_.end())
+			bucket_space_.remote(it);
+	}
+
 private:
 
 	void computeOptParams()
@@ -73,7 +82,7 @@ private:
 			b_vec_.push_back(lsh::genUniformRandom(0, w));
 		}
 
-		w = 10;
+		w_ = 10;
 	}
 
 	/**an universal hash function class which can hash a unsigned int vector into a unsigned int number
@@ -82,9 +91,9 @@ private:
 	unsigned int universalHash(const std::vector<unsigned int>& vec)
 	{
 		unsigned int h = 0;
-		for(int i=0;i<r.size();++i)
+		for(int i=0;i<key_size_;++i)
 		{
-			h = h + (uint64_t)(r[i]) * (uint64_t)(vec[i]);
+			h = h + (uint64_t)(hash_coefficient_[i]) * (uint64_t)(vec[i]);
 			h = (h & TWO_TO_32_MINUS_1) + 5 * (h >> 32);
 			if(h > PRIME_DEFAULT)
 				h -= PRIME_DEFAULT;
@@ -102,23 +111,27 @@ private:
 	*  b: a real number chosen uniformly from the range [0, w]
 	*  @return The hashing value
 	*/
-	unsigned int hash(const std::vector<double>& a, const double b, const ElementType* feature) const
+	unsigned int lshHash(const std::vector<double>& a, const double b, const ElementType* feature) const
 	{
 		double key=0;
 		for(int i=0;i<feature_size_;++i)
 			key += a[i]*feature[i];
-		key = (unsigned int)floor((key+b) / w);
+		key = (unsigned int)floor((key+b) / w_);
 
 		return key;
 	}
 
+	/**Get the key of the feature
+	 * For each feature, first hash it into K values by using a list of K lsh hash functions (K: key_size_)
+	 * Then use an universal hash function to hash the K values into an integer
+	 */
 	unsigned int getKey(const ElementType* feature) const
 	{
 		std::vector<unsigned int> values;
 		values.resize(key_size_);
 
 		for(int i=0;i<key_size_;++i)
-			values[i] = hash(a_vec_[i], b_vec_[i], feature);
+			values[i] = lshHash(a_vec_[i], b_vec_[i], feature);
 
 		return universalHash(values);
 	}
@@ -161,7 +174,7 @@ private:
 	/*two random vector
 	 *r: use to hash the concatenate the L hash function, all same for each table
 	 */
-	std::vector<unsigned int> r_;
+	std::vector<unsigned int> hash_coefficient_;
 }
 
 
