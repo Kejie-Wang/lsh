@@ -15,8 +15,13 @@
 namespace lsh
 {
 
-//2^32 - 5
+// 2^32 - 5
 #define PRIME_DEFAULT 4294967291U
+
+// 2^32-1
+#define TWO_TO_32_MINUS_1 4294967295U
+
+typedef unsigned long long uint64_t;
 
 /*The feature index which unique determines a feature, start from zero*/
 typedef unsigned int FeatureIndex;
@@ -59,6 +64,7 @@ public:
 	}
 
 private:
+
 	void computeOptParams()
 	{	
 		for(int i=0;i<key_size_;++i)
@@ -67,7 +73,25 @@ private:
 			b_vec_.push_back(lsh::genUniformRandom(0, w));
 		}
 
-		w = 10;			//temporary set
+		w = 10;
+	}
+
+	/**an universal hash function class which can hash a unsigned int vector into a unsigned int number
+	 * The hashing value is no more than the prime 2^32-5
+	 */
+	unsigned int universalHash(const std::vector<unsigned int>& vec)
+	{
+		unsigned int h = 0;
+		for(int i=0;i<r.size();++i)
+		{
+			h = h + (uint64_t)(r[i]) * (uint64_t)(vec[i]);
+			h = (h & TWO_TO_32_MINUS_1) + 5 * (h >> 32);
+			if(h > PRIME_DEFAULT)
+				h -= PRIME_DEFAULT;
+			assert(h < PRIME_DEFAULT);
+		}
+
+		return h;
 	}
 
 	/**
@@ -90,7 +114,13 @@ private:
 
 	unsigned int getKey(const ElementType* feature) const
 	{
+		std::vector<unsigned int> values;
+		values.resize(key_size_);
 
+		for(int i=0;i<key_size_;++i)
+			values[i] = hash(a_vec_[i], b_vec_[i], feature);
+
+		return universalHash(values);
 	}
 
 
@@ -119,21 +149,19 @@ private:
 
 
 	/**LSH Hashing function: H(v) = (a*v + b) / w
-	 * a: a list of hashing function of the coeffecient a
-	 * b: a list of hashing function if the coeffecient b
-	 * w: a fix value of the coeffecient
+	 * a_vec_: a list of hashing function of the coeffecient a, random for each table
+	 * b_vec_: a list of hashing function if the coeffecient b, random for each table
+	 * w_: a fix value of the coeffecient, all same for each table
 	 */
 	std::vector<std::vector<double> > a_vec_;
 	std::vectoor<double> b_vec_;
-	double w;
+	double w_;
+
 
 	/*two random vector
-	 *r1: use to hash the concatenate the L hash function
-	 *r2: use to compute the identification of the feature
+	 *r: use to hash the concatenate the L hash function, all same for each table
 	 */
-	std::vector<unsigned int> r1_, r2_;
-
-
+	std::vector<unsigned int> r_;
 }
 
 
