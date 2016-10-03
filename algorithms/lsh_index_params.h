@@ -11,7 +11,7 @@ namespace lsh
 
 st LshIndexParams
 {
-private:
+private: 
 	unsigned int table_number;
 	unsigned int multi_probe_level;
 
