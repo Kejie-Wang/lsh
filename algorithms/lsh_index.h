@@ -29,8 +29,7 @@ public:
 
 public:
 
-	/**
-	   Constructor using with the params with default value
+	/**Constructor using with the params with default value
 	*/
 	LshIndex(const LshIndexParams params = LshIndexParams())
 	{
@@ -38,8 +37,57 @@ public:
 		key_size_ = params.get_key_size();
 		multi_probe_level_  =params.get_multi_probe_level_();
 
-		universah_hash_ = UniversalHash(key_size_);
+		hash_coefficient_ = lsh::genUniformRandom(0, 1<<29);
 	}
+
+	/**Constructor using the input dataset and params
+	 * @param input_data The input dataset
+	 * @param params The params of the index
+	 */
+	LshIndex(const Matrix<ElementType>& input_data, const LshIndexParams params = LshIndexParams())
+	{
+		table_number_ = params.get_table_number();
+		key_size_ = params.get_key_size();
+		multi_probe_level_  =params.get_multi_probe_level_();
+
+		hash_coefficient_ = lsh::genUniformRandom(0, 1<<29);
+
+		setDataset(input_data);
+	}
+
+	~LshIndex()
+	{
+	}
+
+	void buildIndex()
+	{
+        tables_.resize(table_number_);
+        // Add the features to each table
+        for (unsigned int i = 0; i < table_number_; ++i) 
+        {
+        	tables_[i] = lsh::LshTable<ElementType>(veclen_, key_size_, hash_coefficient_);
+
+            for(int j=0;j<points_.size();++j)
+            	table_[i].add(j, points_[j]);	
+        }
+	}
+
+
+private:
+
+	/**set the dataset for this index
+	 * @param dataset The set dataset
+	*/
+	void setDataset(const Matrix<ElementType>& dataset)
+	{
+		size_ = dataset.rows;
+		veclen_ = dataset.cols;
+
+		for(int i=0;i<size_;++i)
+			points_[i] = dataset[i];
+	}
+
+
 
 }
 
@@ -49,20 +97,26 @@ private:
 	/*Points Data*/
 	std::vector<ElementType*> points_;
 
+	/*Number of points in the dataset*/
+	unsigned int size_;
+
+	/*Length of points in the dataset*/
+	unsigned int veclen_;
+
 	/*Hashing tables*/
 	std::std::vector<lsh::LshTable<ElementType> > tables_;
 
-	/*table number*/
+	/*Table number*/
 	unsigned int table_number_;
 
-	/*key size*/
+	/*Key size*/
 	unsigned int key_size_;
 
-	/*multi-probe level*/
+	/*Multi-probe level*/
 	unsigned int multi_probe_level_;
 
-	/*universal hash function*/
-	static UniversalHash universah_hash_;
+	/*The general hash function coefficients*/
+	std::vector<unsigned int> hash_coefficient_;
 }
 
 #endif /*LSH_LSH_INDEX*/
