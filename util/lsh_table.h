@@ -77,7 +77,7 @@ private:
 
 	void computeOptParams()
 	{	
-		w_ = 10;
+		w_ = 100;
 		for(int i=0;i<key_size_;++i)
 		{
 			a_vec_.push_back(lsh::genGaussianRandVec(feature_size_));
