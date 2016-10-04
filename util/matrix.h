@@ -15,16 +15,15 @@ public:
 	}
 
 	//constructor
-	Matrix(T* data_, size_t rows_, size_t cols_, size_t stride_=0) :
-		data(data_), rows(rows_), cols(cols_), stride(stride_)
+	Matrix(T* data_, size_t rows_, size_t cols_) :
+		data(data_), rows(rows_), cols(cols_)
 	{
-		if(stride==0) stride = sizeof(T)*cols;
 	}
 
 	//overload the operator [] to return a pointer
 	inline T* operator[](size_t index) const
 	{
-		return reinterpret_cast<T*>(data+index*stride);
+		return reinterpret_cast<T*>(data+index*cols);
 	}
 
 	//return the data pointer
@@ -36,7 +35,6 @@ public:
 public:
 	size_t rows;
 	size_t cols;
-	size_t stride;
 
 private:
 	T* data;

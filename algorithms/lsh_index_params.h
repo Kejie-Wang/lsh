@@ -21,7 +21,7 @@ private:
 
 
 public:
-	LshIndexParams(unsigned table_number = 12, unsigned int key_size = 20, unsigned int multi_probe_level = 2)
+	LshIndexParams(unsigned table_number = 6, unsigned int key_size = 4, unsigned int multi_probe_level = 2)
 	{
 		this->table_number = table_number;
 		this->key_size = key_size;

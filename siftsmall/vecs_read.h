@@ -10,7 +10,7 @@
 template<typename T>
 void vecs_read(const std::string filename, T* &vecs, int &dim, int &vecs_num)
 {
-	FILE* fp = fopen(filename.c_str(), "r");
+	FILE* fp = fopen(filename.c_str(), "rb");
 
 	if(fp == NULL)
 	{
@@ -27,7 +27,7 @@ void vecs_read(const std::string filename, T* &vecs, int &dim, int &vecs_num)
 	vecs_num = ftell(fp) / vecs_sizeof;
 
 	//allocate memory for the vectors
-  vecs = new T[dim*vecs_num];
+	vecs = new T[dim*vecs_num];
 
 	//printf("dim=%d, num=%d\n",dim, vecs_num);
 
