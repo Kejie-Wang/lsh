@@ -11,46 +11,45 @@
 #include <string>
 #include "lsh_index_params.h"
 #include "../util/lsh_table.h"
-#include "../util/universal_hash.h"
+#include "../util/matrix.h"
 
 namespace lsh
 {
 
-static 
-
-static 
-
-<typename T>
+template<typename T>
 class LshIndex
 {
+
 public:
+
 	typedef T ElementType;
   
-
 public:
 
 	/**Constructor using with the params with default value
+	 * @param params The params of the index
 	*/
 	LshIndex(const LshIndexParams params = LshIndexParams())
 	{
 		table_number_ = params.get_table_number();
 		key_size_ = params.get_key_size();
-		multi_probe_level_  =params.get_multi_probe_level_();
+		multi_probe_level_  =params.get_multi_probe_level();
 
-		hash_coefficient_ = lsh::genUniformRandom(0, 1<<29);
+		hash_coefficient_.reserve(key_size_);
+		hash_coefficient_ = lsh::genUniformRandIntVec(0, 1<<29, key_size_);
 	}
 
 	/**Constructor using the input dataset and params
 	 * @param input_data The input dataset
 	 * @param params The params of the index
 	 */
-	LshIndex(const Matrix<ElementType>& input_data, const LshIndexParams params = LshIndexParams())
+	LshIndex(const lsh::Matrix<ElementType>& input_data, const LshIndexParams params = LshIndexParams())
 	{
 		table_number_ = params.get_table_number();
 		key_size_ = params.get_key_size();
-		multi_probe_level_  =params.get_multi_probe_level_();
+		multi_probe_level_  =params.get_multi_probe_level();
 
-		hash_coefficient_ = lsh::genUniformRandom(0, 1<<29);
+		hash_coefficient_ = lsh::genUniformRandIntVec(0, 1<<29, key_size_);
 
 		setDataset(input_data);
 	}
@@ -68,7 +67,7 @@ public:
         	tables_[i] = lsh::LshTable<ElementType>(veclen_, key_size_, hash_coefficient_);
 
             for(int j=0;j<points_.size();++j)
-            	table_[i].add(j, points_[j]);	
+            	tables_[i].add(j, points_[j]);	
         }
 	}
 
@@ -87,11 +86,6 @@ private:
 			points_[i] = dataset[i];
 	}
 
-
-
-}
-
-
 private:
 
 	/*Points Data*/
@@ -104,7 +98,7 @@ private:
 	unsigned int veclen_;
 
 	/*Hashing tables*/
-	std::std::vector<lsh::LshTable<ElementType> > tables_;
+	std::vector<lsh::LshTable<ElementType> > tables_;
 
 	/*Table number*/
 	unsigned int table_number_;
@@ -116,7 +110,12 @@ private:
 	unsigned int multi_probe_level_;
 
 	/*The general hash function coefficients*/
-	std::vector<unsigned int> hash_coefficient_;
+	std::vector<int> hash_coefficient_;
+
+};
+
+
+
 }
 
 #endif /*LSH_LSH_INDEX*/

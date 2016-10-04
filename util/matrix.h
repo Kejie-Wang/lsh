@@ -40,7 +40,7 @@ public:
 
 private:
 	T* data;
-}
+};
 
 }
 

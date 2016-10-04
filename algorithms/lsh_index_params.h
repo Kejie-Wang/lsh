@@ -9,8 +9,9 @@
 namespace lsh
 {
 
-st LshIndexParams
+class LshIndexParams
 {
+
 private: 
 	unsigned int table_number;
 	unsigned int multi_probe_level;
@@ -27,21 +28,25 @@ public:
 		this->multi_probe_level = multi_probe_level;
 	}
 
-	unsigned int get_table_number()
+	~LshIndexParams()
+	{
+	}
+
+	unsigned int get_table_number() const
 	{
 		return table_number;
 	}
 
-	unsigned int get_key_size()
+	unsigned int get_key_size() const
 	{
 		return key_size;
 	}
 
-	unsigned int get_multi_probe_level()
+	unsigned int get_multi_probe_level() const
 	{
 		return multi_probe_level;
 	}
-}
+};
 
 }
 

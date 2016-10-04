@@ -32,7 +32,8 @@ typedef unsigned int BucketKey;
 /*A bucket in the lsh table*/
 typedef std::vector<FeatureIndex> Bucket;
 
-<typename T>
+
+template<typename T>
 class LshTable
 {
 	typedef T ElementType;
@@ -46,7 +47,7 @@ public:
 	{
 	}
 
-	LshTable(unsigned int feature_size, unsigned int key_size, std::vector<unsigned int> hash_coefficient)
+	LshTable(unsigned int feature_size, unsigned int key_size, std::vector<int> hash_coefficient)
 	{
 		feature_size_ = feature_size;
 		key_size_ = key_size_;
@@ -61,16 +62,16 @@ public:
 	void add(unsigned int value, const ElementType* feature)
 	{
 		BucketKey key = getKey(feature);
-		bucket_space_.push_back(key);
+		bucket_space_[key].push_back(value);
 	}
 
-	void remove(unsigned int value, const ElementType* feature)
-	{
-		BucketKey key = getKey(feature);
-		Bucket::iterator it;
-		if((it == bucket_space_.find(bucket_space_.begin(), bucket_space_.end(), value)) != bucket_space_.end())
-			bucket_space_.remote(it);
-	}
+	// void remove(unsigned int value, const ElementType* feature)
+	// {
+	// 	BucketKey key = getKey(feature);
+	// 	Bucket::iterator it;
+	// 	if((it == bucket_space_.find(bucket_space_.begin(), bucket_space_.end(), value)) != bucket_space_.end())
+	// 		bucket_space_.remote(it);
+	// }
 
 private:
 
@@ -78,8 +79,8 @@ private:
 	{	
 		for(int i=0;i<key_size_;++i)
 		{
-			a_vec_.push_back(lsh::getGaussianRandVec(feature_size_));
-			b_vec_.push_back(lsh::genUniformRandom(0, w));
+			a_vec_.push_back(lsh::genGaussianRandVec(feature_size_));
+			b_vec_.push_back(lsh::genUniformRandom(0, w_));
 		}
 
 		w_ = 10;
@@ -90,14 +91,13 @@ private:
 	 */
 	unsigned int universalHash(const std::vector<unsigned int>& vec)
 	{
-		unsigned int h = 0;
+		uint64_t h = 0;
 		for(int i=0;i<key_size_;++i)
 		{
 			h = h + (uint64_t)(hash_coefficient_[i]) * (uint64_t)(vec[i]);
 			h = (h & TWO_TO_32_MINUS_1) + 5 * (h >> 32);
 			if(h > PRIME_DEFAULT)
 				h -= PRIME_DEFAULT;
-			assert(h < PRIME_DEFAULT);
 		}
 
 		return h;
@@ -167,15 +167,15 @@ private:
 	 * w_: a fix value of the coeffecient, all same for each table
 	 */
 	std::vector<std::vector<double> > a_vec_;
-	std::vectoor<double> b_vec_;
+	std::vector<double> b_vec_;
 	double w_;
 
 
 	/*two random vector
 	 *r: use to hash the concatenate the L hash function, all same for each table
 	 */
-	std::vector<unsigned int> hash_coefficient_;
-}
+	std::vector<int> hash_coefficient_;
+};
 
 
 }
