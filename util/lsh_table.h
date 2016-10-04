@@ -50,7 +50,7 @@ public:
 	LshTable(unsigned int feature_size, unsigned int key_size, std::vector<int> hash_coefficient)
 	{
 		feature_size_ = feature_size;
-		key_size_ = key_size_;
+		key_size_ = key_size;
 		hash_coefficient_ = hash_coefficient;
 		computeOptParams();
 	}
@@ -77,13 +77,12 @@ private:
 
 	void computeOptParams()
 	{	
+		w_ = 10;
 		for(int i=0;i<key_size_;++i)
 		{
 			a_vec_.push_back(lsh::genGaussianRandVec(feature_size_));
 			b_vec_.push_back(lsh::genUniformRandom(0, w_));
 		}
-
-		w_ = 10;
 	}
 
 	/**an universal hash function class which can hash a unsigned int vector into a unsigned int number

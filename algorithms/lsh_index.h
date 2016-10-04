@@ -81,7 +81,8 @@ private:
 	{
 		size_ = dataset.rows;
 		veclen_ = dataset.cols;
-
+		
+		points_.resize(size_);
 		for(int i=0;i<size_;++i)
 			points_[i] = dataset[i];
 	}

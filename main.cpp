@@ -27,6 +27,9 @@ int main()
 	lsh::Matrix<int> indices(new int[query.rows*nn], query.rows, nn);
 	lsh::Matrix<float> dists(new float[query.rows*nn], query.rows, nn);
 
+	//test
+	vecs_print<float>("dataset.out", dataset.ptr(), dataset.cols, dataset.rows);
+
 	// construct an randomized kd-tree index using 4 kd-trees
 	lsh::LshIndex<float> index(dataset);
 	index.buildIndex();

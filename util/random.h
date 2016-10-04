@@ -50,18 +50,23 @@ std::vector<double> genGaussianRandVec(int veclen)
 }
 
 
+int getRandInt(int min, int max)
+{
+	assert(min <= max);
+	int r;
+	r = min + (int)((max - min + 1.0) * rand() / (RAND_MAX + 1.0));
+	assert(r >= min && r <= max);
+	return r;
+}
+
 std::vector<int> genUniformRandIntVec(int min, int max, int veclen)
 {
-	int len = max - min;
-	assert(len <= RAND_MAX);
-
 	std::vector<int> vec;
 	vec.reserve(veclen);
 	for(int i=0;i<veclen;++i)
-	{
-		int t = rand()%len;
-		vec.push_back(t + min);
-	}
+		vec.push_back(getRandInt(min, max));
+	
+	return vec;
 }
 
 }
