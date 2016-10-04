@@ -1,4 +1,6 @@
 #include "algorithms/lsh_index.h"
+#include <cstdlib>
+#include "siftsmall/vecs_read.h"
 
 int main()
 {

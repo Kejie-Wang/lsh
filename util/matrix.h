@@ -15,7 +15,7 @@ public:
 	}
 
 	//constructor
-	Matrix(T* data_, size_t rows_, size_t cols, size_t stride=0) :
+	Matrix(T* data_, size_t rows_, size_t cols_, size_t stride_=0) :
 		data(data_), rows(rows_), cols(cols_), stride(stride_)
 	{
 		if(stride==0) stride = sizeof(T)*cols;

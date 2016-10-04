@@ -89,7 +89,7 @@ private:
 	/**an universal hash function class which can hash a unsigned int vector into a unsigned int number
 	 * The hashing value is no more than the prime 2^32-5
 	 */
-	unsigned int universalHash(const std::vector<unsigned int>& vec)
+	unsigned int universalHash(std::vector<unsigned int>& vec) const
 	{
 		uint64_t h = 0;
 		for(int i=0;i<key_size_;++i)
