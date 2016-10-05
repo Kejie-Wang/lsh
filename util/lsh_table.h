@@ -102,6 +102,20 @@ private:
 		return h;
 	}
 
+	/**A function compute a query q from the boundary of the slot hi(q) + d
+	 * The dist is equal to ai*q + bi - hi(q) * W
+	 */
+	double query_dist(const int hash_func_index, const ElementType* query)
+	{
+		const std::vector<double>& a = a_vec_[hash_func_index];
+		double b = b_vec_[hash_func_index];
+		double val=0;
+		for(int i=0;i<feature_size_;++i)
+			val += a[i]*feature[i];
+		
+		return val - ((unsigned int)floor((key+b) / w_)) * w_;
+	}
+
 	/**
 	*  Get the hashing value using hashing function family: H(v) = (a*v + b) / w
 	*  @param feature The computed feature
@@ -110,8 +124,10 @@ private:
 	*  b: a real number chosen uniformly from the range [0, w]
 	*  @return The hashing value
 	*/
-	unsigned int lshHash(const std::vector<double>& a, const double b, const ElementType* feature) const
+	unsigned int lshHash(const int hash_func_index, const ElementType* feature) const
 	{
+		const std::vector<double>& a = a_vec_[hash_func_index];
+		double b = b_vec_[hash_func_index];
 		double key=0;
 		for(int i=0;i<feature_size_;++i)
 			key += a[i]*feature[i];
@@ -130,7 +146,7 @@ private:
 		values.resize(key_size_);
 
 		for(int i=0;i<key_size_;++i)
-			values[i] = lshHash(a_vec_[i], b_vec_[i], feature);
+			values[i] = lshHash(i, feature);
 
 		return universalHash(values);
 	}
