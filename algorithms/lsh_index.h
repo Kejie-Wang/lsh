@@ -74,7 +74,7 @@ public:
 
 	void knnSearch(Matrix<ElementType>& queries,
 					Matrix<unsigned int>& indices,
-					unsigned int, knn)
+					unsigned int knn)
 	{
 		for(int i=0;i<(int)queries.rows;++i)
 		{
@@ -85,7 +85,7 @@ public:
 		}
 	}
 
-	void getNeighbors(const ElementType* vec, )
+	void getNeighbors(const ElementType* vec){}
 
 
 private:

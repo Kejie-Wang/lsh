@@ -2,9 +2,9 @@
 #define _LSH_QUERY_DIRECTED_PROBE_
 
 #include <vector>
-#include <algorithms>
+#include <algorithm>
 #include <queue>
-#include <bitset>
+#include <set>
 #include "../util/lsh_table.h"
 
 namespace lsh
@@ -18,7 +18,7 @@ typedef struct _PerturbationItem
 } PerturbationItem;
 
 typedef std::pair<double, std::set<unsigned int> > ScoreSetPair;	//score and a set of item index
-typedef std::vector<pair<int, int> > PerturbationVector;
+typedef std::vector<std::pair<int, int> > PerturbationVector;
 
 bool pertubation_item_cmp(const PerturbationItem& item1, const PerturbationItem& item2)
 {
