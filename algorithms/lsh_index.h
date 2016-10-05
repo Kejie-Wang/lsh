@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include "lsh_index_params.h"
+#include "query_directed_probe.h"
 #include "../util/lsh_table.h"
 #include "../util/matrix.h"
 
@@ -71,6 +72,21 @@ public:
         }
 	}
 
+	void knnSearch(Matrix<ElementType>& queries,
+					Matrix<unsigned int>& indices,
+					unsigned int, knn)
+	{
+		for(int i=0;i<(int)queries.rows;++i)
+		{
+			ElementType* query = queries[i];
+			QueryDirectedProbe<ElementType> query_directed_probe(&tables_, query, key_size_);
+
+
+		}
+	}
+
+	void getNeighbors(const ElementType* vec, )
+
 
 private:
 
@@ -113,6 +129,9 @@ private:
 	/*The general hash function coefficients*/
 	std::vector<int> hash_coefficient_;
 
+
+	/**Variable for query-directed probing
+	 */
 };
 
 
